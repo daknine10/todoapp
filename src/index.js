@@ -5,5 +5,5 @@ import Task from "./modules/task.js"
 
 const manager = new Manager()
 
-manager.createTask("Task1", "This is a Task", "Hello", "2024-10-23", "High")
+manager.createTask("Task1", "This is a Task", "2024-10-23", "High")
 console.log(manager.getOverdue())

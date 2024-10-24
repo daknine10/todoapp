@@ -9,7 +9,18 @@ body {
 }
 
 .task-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    height: 100%;
+    gap: 20px;
+    padding: 10px;
     background-color: pink;
+}
+
+.task-box {
+    background-color: bisque;
+    max-height: 40%;
+    max-width: 200px;
 }
 
 .menu {
