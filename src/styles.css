@@ -5,10 +5,13 @@
 }
 
 dialog {
-    display: flex;
-    flex-direction: column;
     justify-self: center;
     align-self: center;
+}
+
+.dialog-container {
+    display: flex;
+    flex-direction: column;
     gap: 12px;
     padding: 6px;
 }

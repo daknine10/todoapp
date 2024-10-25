@@ -1,5 +1,10 @@
 import { format } from "date-fns"
 
+const projects = document.querySelector(".projects");
+const addProject = document.querySelector(".add-project");
+const addTask = document.querySelector(".add-task");
+const dialog = document.querySelector("dialog");
+
 function renderTask(task, index) {  
     const taskContainer = document.querySelector(".task-container")
 
@@ -64,11 +69,16 @@ function renderTaskList(manager, project) {
             renderTaskList(manager, project);
         })
     }
+
+    const editButtons = [...document.querySelectorAll(".edit")]
+    for (let editButton of editButtons) {
+        editButton.addEventListener("click", (e) => {
+            const task = project.list[e.target.closest(".task-box").dataset.index]
+            editTaskListener(manager, task);
+            renderTaskList(manager, project);
+        })
+    }
 }
-const projects = document.querySelector(".projects");
-const addProject = document.querySelector(".add-project");
-const addTask = document.querySelector(".add-task")
-const dialog = document.querySelector("dialog");
 
 function addProjectListener(manager) {
     addProject.addEventListener("click", () => {
@@ -116,43 +126,48 @@ function renderProjects(manager) {
 function addTaskListener(manager) {
     addTask.addEventListener("click", () => {
         dialog.textContent = "";
+        const dialogContainer = document.createElement("form");
+        dialogContainer.className = "dialog-container"
         const titleLabel = document.createElement("label");
 
         titleLabel.setAttribute("for", "title");
         titleLabel.textContent = "Title of task:";
-        dialog.appendChild(titleLabel)
+        dialogContainer.appendChild(titleLabel)
 
         const titleTextBox = document.createElement("input");
         titleTextBox.setAttribute("id", "title");
-        dialog.appendChild(titleTextBox)
+        titleTextBox.required = true;
+        dialogContainer.appendChild(titleTextBox)
 
         const descriptionLabel = document.createElement("label");
         descriptionLabel.textContent = "Description:"
         descriptionLabel.setAttribute("for", "description");
-        dialog.appendChild(descriptionLabel)
+        dialogContainer.appendChild(descriptionLabel)
 
         const descriptionText = document.createElement("textarea");
         descriptionText.id = "description";
-        dialog.appendChild(descriptionText)
+        dialogContainer.appendChild(descriptionText)
 
         const dueDateLabel = document.createElement("label")
         dueDateLabel.textContent = "Due Date:"
         dueDateLabel.setAttribute("for", "date")
-        dialog.appendChild(dueDateLabel)
+        dialogContainer.appendChild(dueDateLabel)
 
         const selectDueDate = document.createElement("input")
         selectDueDate.setAttribute("type", "date");
         selectDueDate.id = "date";
-        dialog.appendChild(selectDueDate)
+        selectDueDate.required = true;
+        dialogContainer.appendChild(selectDueDate)
 
         const priorityLabel = document.createElement("label")
         priorityLabel.setAttribute("for", "priority");
         priorityLabel.textContent = "Priority";
-        dialog.appendChild(priorityLabel)
+        dialogContainer.appendChild(priorityLabel)
 
         const prioritySelect = document.createElement("select");
         prioritySelect.id = "priority"
-        dialog.appendChild(prioritySelect)
+        prioritySelect.required = true;
+        dialogContainer.appendChild(prioritySelect)
 
         const high = document.createElement("option")
         high.textContent = "High"
@@ -171,17 +186,104 @@ function addTaskListener(manager) {
 
         const submit = document.createElement("button");
         submit.textContent = "Submit";
-        submit.addEventListener("click", (e) => {
+        submit.type = "submit";
+        dialogContainer.addEventListener("submit", (e) => {
+            e.preventDefault();
             const projectIndex = document.querySelector(".task-container").dataset.project
             manager.createTask(titleTextBox.value, descriptionText.value, selectDueDate.value, prioritySelect.value)
             manager.refreshProjects()
             renderTaskList(manager, manager.basicProjects[projectIndex])
             dialog.close();
         })
-        dialog.appendChild(submit);
+        dialogContainer.appendChild(submit);
+        dialog.appendChild(dialogContainer);
 
         dialog.show();
     })
+}
+
+function editTaskListener(manager, task) {
+    dialog.textContent = "";
+    const dialogContainer = document.createElement("form");
+    dialogContainer.className = "dialog-container"
+    const titleLabel = document.createElement("label");
+
+    titleLabel.setAttribute("for", "title");
+    titleLabel.textContent = "Title of task:";
+    dialogContainer.appendChild(titleLabel)
+
+    const titleTextBox = document.createElement("input");
+    titleTextBox.setAttribute("id", "title");
+    titleTextBox.required = true;
+    titleTextBox.value = task.title;
+    dialogContainer.appendChild(titleTextBox)
+
+    const descriptionLabel = document.createElement("label");
+    descriptionLabel.textContent = "Description:"
+    descriptionLabel.setAttribute("for", "description");
+    dialogContainer.appendChild(descriptionLabel)
+
+    const descriptionText = document.createElement("textarea");
+    descriptionText.id = "description";
+    descriptionText.value = task.description;
+    dialogContainer.appendChild(descriptionText)
+
+    const dueDateLabel = document.createElement("label")
+    dueDateLabel.textContent = "Due Date:"
+    dueDateLabel.setAttribute("for", "date")
+    dialogContainer.appendChild(dueDateLabel)
+
+    const selectDueDate = document.createElement("input")
+    selectDueDate.setAttribute("type", "date");
+    selectDueDate.id = "date";
+    selectDueDate.value = task.dueDate;
+    selectDueDate.required = true;
+    dialogContainer.appendChild(selectDueDate)
+
+    const priorityLabel = document.createElement("label")
+    priorityLabel.setAttribute("for", "priority");
+    priorityLabel.textContent = "Priority";
+    dialogContainer.appendChild(priorityLabel)
+
+    const prioritySelect = document.createElement("select");
+    prioritySelect.id = "priority"
+    prioritySelect.required = true;
+    prioritySelect.setAttribute = ("defaultValue", task.priority)
+    dialogContainer.appendChild(prioritySelect)
+
+    const high = document.createElement("option")
+    high.textContent = "High"
+    high.value = "High"
+    prioritySelect.appendChild(high)
+
+    const medium = document.createElement("option")
+    medium.textContent = "Medium"
+    medium.value = "Medium"
+    prioritySelect.appendChild(medium)
+
+    const low = document.createElement("option")
+    low.textContent = "Low"
+    low.value = "Low"
+    prioritySelect.appendChild(low)
+
+    const submit = document.createElement("button");
+    submit.textContent = "Submit";
+    submit.type = "submit";
+    dialogContainer.addEventListener("submit", (e) => {
+        e.preventDefault()
+        const projectIndex = document.querySelector(".task-container").dataset.project
+        task.title = titleTextBox.value
+        task.description = descriptionText.value
+        task.dueDate = selectDueDate.value
+        task.priority = prioritySelect.value
+        manager.refreshProjects()
+        renderTaskList(manager, manager.basicProjects[projectIndex])
+        dialog.close();
+    })
+    dialogContainer.appendChild(submit);
+    dialog.appendChild(dialogContainer);
+
+    dialog.show();
 }
 
 export {renderTaskList, addProjectListener, renderProjects, addTaskListener}

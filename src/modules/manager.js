@@ -21,7 +21,7 @@ export default class Manager {
         for (let task of project.list) {
             this.removeTask(task);
         }
-        this.sortByDate()
+        this.refreshProjects();
     }
     
     // TASK METHODS //
@@ -32,7 +32,7 @@ export default class Manager {
 
     addTask(task) {
         this.basicProjects[0].list.push(task);
-        this.sortByDate();
+        this.refreshProjects()
     }
 
     removeTask(task) {
@@ -60,6 +60,7 @@ export default class Manager {
                 && DateFNS.isAfter(task.dueDate, DateFNS.endOfYesterday())
                 && task.complete === false) dueToday.push(task);
         }
+        this.sortByDate(dueToday)
         this.basicProjects[1].list = dueToday;
     };
 
@@ -70,6 +71,7 @@ export default class Manager {
                 && DateFNS.isAfter(task.dueDate, DateFNS.endOfDay(Date.now()))
                 && task.complete === false) withinWeek.push(task);
         }
+        this.sortByDate(withinWeek)
         this.basicProjects[2].list = withinWeek;
     };
 
@@ -78,6 +80,7 @@ export default class Manager {
         for (let task of this.basicProjects[0].list) {
             if (task.complete === false && DateFNS.isBefore(task.dueDate, DateFNS.endOfYesterday(Date.now()))) overdue.push(task);
         }
+        this.sortByDate(overdue)
         this.basicProjects[3].list = overdue;
     };
 
@@ -87,6 +90,7 @@ export default class Manager {
             if (task.complete === false) all.push(task);
             else this.basicProjects[4].list.push(task);
         }
+        this.sortByDate(all)
         this.basicProjects[0].list = all;
     }
 
@@ -95,6 +99,7 @@ export default class Manager {
         for (let task of this.basicProjects[0].list) {
             if (task.complete === true) completed.push(task);
         }
+        this.sortByDate(completed)
         this.basicProjects[4].list = completed;
     }
 
@@ -103,8 +108,8 @@ export default class Manager {
     }
 
     // HELP METHODS //
-    sortByDate() {
-        this.basicProjects[0].list.sort((a, b) => a.dueDate - b.dueDate);
+    sortByDate(list) {
+        list.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
     };
 
     refreshProjects () {
