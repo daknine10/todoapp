@@ -17,7 +17,7 @@
     <div class="container">
         <nav class="menu">
             <div>
-                <button>All tasks</button>
+                <button id="all">All tasks</button>
             </div>
 
             <div class="sort">
@@ -26,8 +26,11 @@
                 <button id="overdue">Overdue</button>
             </div>
 
-            <div class="projects">
+            <div class="project">
                 <h2>My projects</h2>
+                <div class="projects">
+                    
+                </div>
             </div>
 
             <div>
@@ -37,27 +40,28 @@
 
         <div class="task-container">
             <div class="task-box">
-                <h2>Dummy Task</h2>
-                <p>This is a Task</p>
-                <p>2024-10-23</p>
-                <p>High</p>
-                <button class="edit">Edit</button>
-                <button class="remove">Remove</button>
+                <div class="card-top">
+                    <p class="due-date">2024-10-23</p>
+                    <h2>Dummy Task</h2>
+                    <p>This is a Task</p>
+                </div>
+                <div class="card-bottom">
+                    <p>High</p>
+                    <div class="task-buttons">
+                        <button class="edit">Edit</button>
+                        <button class="remove">Remove</button>
+                    </div>
+                </div>
             </div>
-
-            <div class="task-box">
-                <h2>Dummy Task</h2>
-                <p>This is a Task</p>
-                <p>2024-10-23</p>
-                <p>High</p>
-                <button class="edit">Edit</button>
-                <button class="remove">Remove</button>
-            </div>  
         </div>
 
     </div>
     <footer>
         <p>Footer</p>
     </footer>
+
+    <dialog>
+
+    </dialog>
 </body>
 </html>

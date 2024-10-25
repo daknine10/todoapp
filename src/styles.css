@@ -1,5 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+dialog {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-self: center;
+    gap: 12px;
+    padding: 6px;
+}
+
+html {
+    height: 100%;
+}
+
 body {
     display: grid;
+    min-height: 100%;
     grid-template-rows: 1fr 8fr 1fr;
 }
 
@@ -11,16 +31,46 @@ body {
 .task-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    height: 100%;
+    max-height: 80vh;
     gap: 20px;
     padding: 10px;
     background-color: pink;
+    overflow: scroll;
 }
 
 .task-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: bisque;
     max-height: 40%;
     max-width: 200px;
+    padding: 6px;
+}
+
+.task-buttons {
+    display: flex;
+    align-self: flex-end;
+    gap: 6px;
+}
+
+.due-date {
+    align-self: end;
+}
+
+.card-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-items: end;
+    gap: 12px;
+}
+
+.card-top {
+    display: flex;
+    flex-direction: column;
+    justify-items: start;
+    gap: 12px;
 }
 
 .menu {
