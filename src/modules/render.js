@@ -139,7 +139,7 @@ function renderProjects(manager) {
         const projectButton = document.createElement("button")
         projectButton.className = "project-button"
         projectButton.textContent = project.title;
-        projectButton.dataset.index = index;
+        projectButton.dataset.index = index + 5;
 
         // write dialog whether tasks should be deleted with project as well
 
@@ -147,6 +147,11 @@ function renderProjects(manager) {
             manager.removeProjectWithTasks(project);
             manager.storeList();
             renderProjects(manager);
+            const taskContainer = document.querySelector(".task-container");
+            const taskIndex = taskContainer.dataset.project
+            if (taskIndex === projectButton.dataset.index || taskIndex === manager.basicProjects.length - 1) {
+                renderTaskList(manager, manager.basicProjects[0])
+            }
         })
 
         projectButton.addEventListener("click", () => {
