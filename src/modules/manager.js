@@ -14,25 +14,28 @@ export default class Manager {
     }
 
     removeProject(project) {
-        this.basicProjects.splice(this.projectList.indexOf(project), 1);
+        this.basicProjects.splice(this.basicProjects.indexOf(project), 1);
     }
 
     removeProjectWithTasks(project) {
         for (let task of project.list) {
             this.removeTask(task);
         }
+        this.basicProjects.splice(this.basicProjects.indexOf(project), 1);
         this.refreshProjects();
     }
     
     // TASK METHODS //
 
     createTask(title, description, notes, dueDate, priority) {
-        this.addTask(new Task(title, description, notes, dueDate, priority));
+        const newTask = new Task(title, description, notes, dueDate, priority)
+        this.addTask(newTask);
+        return newTask;
     }
 
     addTask(task) {
         this.basicProjects[0].list.push(task);
-        this.refreshProjects()
+        this.refreshProjects();
     }
 
     removeTask(task) {
@@ -87,36 +90,52 @@ export default class Manager {
     getAll() {
         let all = []
         for (let task of this.basicProjects[0].list) {
-            if (task.complete === false) all.push(task);
-            else this.basicProjects[4].list.push(task);
+            all.push(task);
         }
         this.sortByDate(all)
         this.basicProjects[0].list = all;
     }
 
-    getCompleted() {
-        let completed = []
-        for (let task of this.basicProjects[0].list) {
-            if (task.complete === true) completed.push(task);
-        }
-        this.sortByDate(completed)
-        this.basicProjects[4].list = completed;
+   
+    getProjects() {
+        for (let project of this.basicProjects.slice(5)) {
+            this.sortByDate(project.list)
     }
-
-    getProject(project) {
-        return project.list
     }
+    
 
     // HELP METHODS //
     sortByDate(list) {
         list.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        list.sort((a, b) => b.complete - a.complete)
     };
+
+    storeList(){
+        for (let project of this.basicProjects) {
+            localStorage.setItem(this.basicProjects.indexOf(project), JSON.stringify(project))
+        }
+    }
+
+    loadList(){
+        for (let i = 0; i < this.basicProjects.length; i++) {
+            const value = JSON.parse(localStorage.getItem(i))
+            console.log(value.list[0])
+            this.basicProjects[i].title = value.title;
+            this.basicProjects[i].list = []
+            if (value.list.length !== 0) {
+                for (let task of value.list) {
+                    console.log(task)
+                    this.basicProjects[i].list.push(new Task(task.title, task.description, task.dueDate, task.priority, task.complete))
+                }
+            }
+        }
+    }
 
     refreshProjects () {
         this.getAll();
         this.getDueToday();
         this.getOverdue();
         this.getWithinWeek();
-        this.getCompleted();
+        this.getProjects();
     }
 }

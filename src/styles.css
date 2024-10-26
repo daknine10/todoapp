@@ -114,3 +114,11 @@ footer {
     display: grid;
     padding: 6px;
 }
+
+.incomplete {
+    background-color: red;
+}
+
+.complete {
+    background-color: green;
+}

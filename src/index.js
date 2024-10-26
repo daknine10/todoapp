@@ -21,7 +21,9 @@ manager.basicProjects[6].addTask(new Task("Task92", "This is a Taae6435k", "2024
 manager.basicProjects[6].addTask(new Task("Task10", "This is a Tgreqask", "2024-10-23", "High"))
 
 
-let currentList = []
+if (window.localStorage.length !== 0) {
+    manager.loadList();
+}
 
 const all = document.querySelector("#all");
 all.addEventListener("click", () => {
@@ -50,6 +52,4 @@ overdue.addEventListener("click", () => {
 addProjectListener(manager);
 renderProjects(manager);
 addTaskListener(manager);
-
-manager.getAll()
 renderTaskList(manager, manager.basicProjects[0])

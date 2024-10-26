@@ -6,9 +6,5 @@ export default class Task {
         this.priority = priority;
         this.complete = false;
     }
-
-    switchComplete() {
-        this.complete = !this.complete ? true : false;
-    }
 }
 

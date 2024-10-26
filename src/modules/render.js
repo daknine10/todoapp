@@ -5,7 +5,7 @@ const addProject = document.querySelector(".add-project");
 const addTask = document.querySelector(".add-task");
 const dialog = document.querySelector("dialog");
 
-function renderTask(task, index) {  
+function renderTask(manager, task, index) {  
     const taskContainer = document.querySelector(".task-container")
 
     const taskBox = document.createElement("div");
@@ -17,7 +17,7 @@ function renderTask(task, index) {
 
     const dueDate = document.createElement("p");
     dueDate.className = "due-date";
-    dueDate.textContent = format(task.dueDate, 'yyyy/MM/dd');
+    dueDate.textContent = format(task.dueDate, 'yyyy-MM-dd');
 
     const taskTitle = document.createElement("h2");
     taskTitle.textContent = task.title;
@@ -40,6 +40,18 @@ function renderTask(task, index) {
     removeButton.className = "remove";
     removeButton.textContent = "Remove";
 
+    const completeButton = document.createElement("button");
+    completeButton.className = task.complete ? "complete" : "incomplete";
+    completeButton.textContent = task.complete ? "Complete" : "Incomplete";
+    completeButton.addEventListener("click", () => {
+        const projectIndex = document.querySelector(".task-container").dataset.project
+        task.complete = task.complete ? false : true;
+        completeButton.className = task.complete ? "complete" : "incomplete";
+        manager.refreshProjects();
+        manager.storeList();
+        renderTaskList(manager, manager.basicProjects[projectIndex])
+    })
+
     taskContainer.appendChild(taskBox);
     taskBox.appendChild(cardTop);
     taskBox.appendChild(cardBottom);
@@ -48,6 +60,7 @@ function renderTask(task, index) {
     cardTop.appendChild(taskDescription);
     cardBottom.appendChild(priority);
     cardBottom.appendChild(taskButtons);
+    cardBottom.appendChild(completeButton);
     taskButtons.appendChild(editButton);
     taskButtons.appendChild(removeButton);
 }
@@ -58,7 +71,7 @@ function renderTaskList(manager, project) {
     taskContainer.dataset.project = manager.basicProjects.indexOf(project);
 
     for (let [index, task] of project.list.entries()) {
-        renderTask(task, index)
+        renderTask(manager, task, index)
     }
 
     const removeButtons = [...document.querySelectorAll(".remove")]
@@ -66,6 +79,7 @@ function renderTaskList(manager, project) {
         removeButton.addEventListener("click", (e) => {
             const task = project.list[e.target.closest(".task-box").dataset.index]
             manager.removeTask(task);
+            manager.storeList();
             renderTaskList(manager, project);
         })
     }
@@ -85,24 +99,31 @@ function addProjectListener(manager) {
         dialog.textContent = ""
         const label = document.createElement("label")
 
-        label.setAttribute("for", "name")
-        label.textContent = "Name of the project:"
+        const dialogContainer = document.createElement("form");
+        dialogContainer.className = "dialog-container";
+        dialog.appendChild(dialogContainer);
+
+        label.setAttribute("for", "name");
+        label.textContent = "Name of the project:";
 
         const textBox = document.createElement("input");
-        textBox.setAttribute("id", "name")
+        textBox.setAttribute("id", "name");
+        textBox.required = true;
 
         const button = document.createElement("button");
         button.textContent = "Submit";
 
-        button.addEventListener("click", () => {
+        dialogContainer.addEventListener("submit", (e) => {
+            e.preventDefault()
             manager.createProject(textBox.value)
             renderProjects(manager)
-            dialog.close()
+            manager.storeList();
+            dialog.close();
         })
 
-        dialog.appendChild(label);
-        dialog.appendChild(textBox);
-        dialog.appendChild(button);
+        dialogContainer.appendChild(label);
+        dialogContainer.appendChild(textBox);
+        dialogContainer.appendChild(button);
         dialog.show();
     })
 }
@@ -110,16 +131,31 @@ function addProjectListener(manager) {
 function renderProjects(manager) {
     projects.textContent = ""
     for (let [index, project] of manager.basicProjects.slice(5).entries()) {
+        const projectContainer = document.createElement("div");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Remove";
+
         const projectButton = document.createElement("button")
         projectButton.className = "project-button"
         projectButton.textContent = project.title;
         projectButton.dataset.index = index;
 
+        // write dialog whether tasks should be deleted with project as well
+
+        deleteButton.addEventListener("click", () => {
+            manager.removeProjectWithTasks(project);
+            manager.storeList();
+            renderProjects(manager);
+        })
+
         projectButton.addEventListener("click", () => {
             renderTaskList(manager, project)
         })
 
-        projects.appendChild(projectButton);
+        projects.appendChild(projectContainer);
+        projectContainer.appendChild(projectButton);
+        projectContainer.appendChild(deleteButton);
     }
 }
 
@@ -189,10 +225,14 @@ function addTaskListener(manager) {
         submit.type = "submit";
         dialogContainer.addEventListener("submit", (e) => {
             e.preventDefault();
-            const projectIndex = document.querySelector(".task-container").dataset.project
-            manager.createTask(titleTextBox.value, descriptionText.value, selectDueDate.value, prioritySelect.value)
+            const projectIndex = document.querySelector(".task-container").dataset.project;
+            const task = manager.createTask(titleTextBox.value, descriptionText.value, selectDueDate.value, prioritySelect.value);
+            if (projectIndex > 4)  {
+                manager.assignTaskToProject(task, manager.basicProjects[projectIndex])
+            };
             manager.refreshProjects()
-            renderTaskList(manager, manager.basicProjects[projectIndex])
+            renderTaskList(manager, manager.basicProjects[projectIndex]);
+            manager.storeList();
             dialog.close();
         })
         dialogContainer.appendChild(submit);
@@ -236,7 +276,7 @@ function editTaskListener(manager, task) {
     const selectDueDate = document.createElement("input")
     selectDueDate.setAttribute("type", "date");
     selectDueDate.id = "date";
-    selectDueDate.value = task.dueDate;
+    selectDueDate.value = format(task.dueDate, 'yyyy-MM-dd');
     selectDueDate.required = true;
     dialogContainer.appendChild(selectDueDate)
 
@@ -248,8 +288,12 @@ function editTaskListener(manager, task) {
     const prioritySelect = document.createElement("select");
     prioritySelect.id = "priority"
     prioritySelect.required = true;
-    prioritySelect.setAttribute = ("defaultValue", task.priority)
     dialogContainer.appendChild(prioritySelect)
+
+    const defaultOption = document.createElement("option");
+    defaultOption.textContent = "<Default>";
+    defaultOption.value = task.priority;
+    prioritySelect.appendChild(defaultOption);
 
     const high = document.createElement("option")
     high.textContent = "High"
@@ -278,6 +322,7 @@ function editTaskListener(manager, task) {
         task.priority = prioritySelect.value
         manager.refreshProjects()
         renderTaskList(manager, manager.basicProjects[projectIndex])
+        manager.storeList();
         dialog.close();
     })
     dialogContainer.appendChild(submit);
