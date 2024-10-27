@@ -111,16 +111,18 @@ export default class Manager {
     };
 
     storeList(){
+        localStorage.clear();
         for (let project of this.basicProjects) {
             localStorage.setItem(this.basicProjects.indexOf(project), JSON.stringify(project))
         }
     }
 
     loadList(){
-        for (let i = 0; i < this.basicProjects.length; i++) {
+        for (let i = 0; i < localStorage.length; i++) {
             const value = JSON.parse(localStorage.getItem(i))
-            console.log(value.list[0])
-            this.basicProjects[i].title = value.title;
+            if (i >= this.basicProjects.length) {
+                this.basicProjects.push(new Project(value.title))
+            }
             this.basicProjects[i].list = []
             if (value.list.length !== 0) {
                 for (let task of value.list) {

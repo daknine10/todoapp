@@ -9,7 +9,7 @@ function renderTask(manager, task, index) {
     const taskContainer = document.querySelector(".task-container")
 
     const taskBox = document.createElement("div");
-    taskBox.className = "task-box";
+    taskBox.className = task.complete ? "task-box-complete" : "task-box";
     taskBox.dataset.index = index;
 
     const cardTop = document.createElement("div");
@@ -46,6 +46,8 @@ function renderTask(manager, task, index) {
     completeButton.addEventListener("click", () => {
         const projectIndex = document.querySelector(".task-container").dataset.project
         task.complete = task.complete ? false : true;
+        taskBox.className = task.complete ? "task-box-complete" : "task-box";
+        console.log(task.complete)
         completeButton.className = task.complete ? "complete" : "incomplete";
         manager.refreshProjects();
         manager.storeList();

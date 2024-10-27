@@ -4,6 +4,20 @@
     box-sizing: border-box;
 }
 
+button {
+    border: solid 1px black;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: visible;
+
+    background: transparent;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
 dialog {
     justify-self: center;
     align-self: center;
@@ -23,7 +37,7 @@ html {
 body {
     display: grid;
     min-height: 100%;
-    grid-template-rows: 1fr 8fr 1fr;
+    grid-template-rows: 1fr 8fr;
 }
 
 .container {
@@ -34,10 +48,9 @@ body {
 .task-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    max-height: 80vh;
     gap: 20px;
     padding: 10px;
-    background-color: pink;
+    background: rgb(226, 208, 188);
     overflow: scroll;
 }
 
@@ -46,6 +59,17 @@ body {
     flex-direction: column;
     justify-content: space-between;
     background-color: bisque;
+    max-height: 40%;
+    max-width: 200px;
+    padding: 6px;
+}
+
+.task-box-complete {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgb(162, 255, 162);
+    opacity: 0.5;
     max-height: 40%;
     max-width: 200px;
     padding: 6px;
@@ -79,9 +103,11 @@ body {
 .menu {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 6px;
-    background-color: aqua;
+    justify-content: start;
+    gap: 20vh;
+    padding: 20px;
+    background: rgb(198, 183, 172);
+    border-right: 1px solid black;
 }
 
 .sort {
@@ -101,12 +127,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: yellow;
-    padding: 6px;
-}
-
-footer {
-    background-color: blueviolet;
+    background-color: rgb(245, 222, 187);
     padding: 6px;
 }
 
@@ -121,4 +142,8 @@ footer {
 
 .complete {
     background-color: green;
+}
+
+p {
+    white-space: pre-wrap;
 }
