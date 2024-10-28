@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/daknine10/todoapp#readme",
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "css-loader": "^7.1.2",
+    "eslint": "^9.13.0",
     "gh-pages": "^6.2.0",
+    "globals": "^15.11.0",
     "html-webpack-plugin": "^5.6.3",
     "style-loader": "^4.0.0",
     "webpack-cli": "^5.1.4",

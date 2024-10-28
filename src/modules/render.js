@@ -122,11 +122,10 @@ function addProjectListener(manager) {
             manager.storeList();
             dialog.close();
         })
-
         dialogContainer.appendChild(label);
         dialogContainer.appendChild(textBox);
         dialogContainer.appendChild(button);
-        dialog.show();
+        dialog.showModal();
     })
 }
 
@@ -136,10 +135,11 @@ function renderProjects(manager) {
         const projectContainer = document.createElement("div");
 
         const deleteButton = document.createElement("button");
+        deleteButton.className = "remove-button"
         deleteButton.textContent = "Remove";
 
         const projectButton = document.createElement("button")
-        projectButton.className = "project-button"
+        projectButton.classList = "project-button"
         projectButton.textContent = project.title;
         projectButton.dataset.index = index + 5;
 
@@ -244,8 +244,7 @@ function addTaskListener(manager) {
         })
         dialogContainer.appendChild(submit);
         dialog.appendChild(dialogContainer);
-
-        dialog.show();
+        dialog.showModal();
     })
 }
 
@@ -335,7 +334,11 @@ function editTaskListener(manager, task) {
     dialogContainer.appendChild(submit);
     dialog.appendChild(dialogContainer);
 
-    dialog.show();
+    dialog.showModal();
 }
+
+dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+})
 
 export {renderTaskList, addProjectListener, renderProjects, addTaskListener}

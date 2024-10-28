@@ -1,9 +1,8 @@
 import "./styles.css"
 import "date-fns"
 import Manager from "./modules/manager.js"
-import Project from "./modules/project.js"
 import Task from "./modules/task.js"
-import { renderTaskList, renderTask, addProjectListener, renderProjects, addTaskListener } from "./modules/render.js"
+import { renderTaskList, addProjectListener, renderProjects, addTaskListener } from "./modules/render.js"
 
 const manager = new Manager()
 
