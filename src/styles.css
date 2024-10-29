@@ -81,6 +81,7 @@ body {
     max-height: 35vh;
     max-width: 200px;
     padding: 6px;
+    overflow-wrap: break-word;
 }
 
 .task-box-complete {
@@ -160,10 +161,10 @@ header {
     margin-left: 6px;
 }
 
-.incomplete {
+.incomplete, .remove-button {
     background-color: rgb(253, 65, 65);
 }
-.incomplete:hover {
+.incomplete:hover, .remove-button:hover {
     background-color: brown;
 }
 
@@ -177,4 +178,13 @@ header {
 
 p {
     white-space: pre-wrap;
+}
+
+.project-container {
+    display: flex;
+    padding-top: 6px;
+}
+
+.priority {
+    font-weight: 1000;
 }

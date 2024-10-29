@@ -6,20 +6,6 @@ import { renderTaskList, addProjectListener, renderProjects, addTaskListener } f
 
 const manager = new Manager()
 
-manager.createTask("Task1", "This is a Task", "2024-10-23", "High")
-manager.createTask("Task2", "This is a Task", "2024-10-24", "Low")
-manager.createTask("Task3", "This is a Task", "2024-10-28", "High")
-manager.createTask("Task3", "This is a Task", "2024-10-25", "High")
-
-manager.createProject("Project1")
-manager.createProject("Project2")
-manager.basicProjects[5].addTask(new Task("Task10", "This is asd", "2024-10-23", "High"))
-manager.basicProjects[5].addTask(new Task("Task92", "This is a xcvbsk", "2024-10-23", "High"))
-manager.basicProjects[5].addTask(new Task("Task10", "This is a Task", "2024-10-23", "High"))
-manager.basicProjects[6].addTask(new Task("Task92", "This is a Taae6435k", "2024-10-23", "High"))
-manager.basicProjects[6].addTask(new Task("Task10", "This is a Tgreqask", "2024-10-23", "High"))
-
-
 if (window.localStorage.length !== 0) {
     manager.loadList();
 }

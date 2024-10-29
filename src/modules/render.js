@@ -71,6 +71,8 @@ function renderTaskList(manager, project) {
     const taskContainer = document.querySelector(".task-container")
     taskContainer.textContent = ""
     taskContainer.dataset.project = manager.basicProjects.indexOf(project);
+    const pageTitle = document.querySelector(".page-title");
+    pageTitle.textContent = project.title;
 
     for (let [index, task] of project.list.entries()) {
         renderTask(manager, task, index)
@@ -131,8 +133,9 @@ function addProjectListener(manager) {
 
 function renderProjects(manager) {
     projects.textContent = ""
-    for (let [index, project] of manager.basicProjects.slice(5).entries()) {
+    for (let [index, project] of manager.basicProjects.slice(4).entries()) {
         const projectContainer = document.createElement("div");
+        projectContainer.className = "project-container"
 
         const deleteButton = document.createElement("button");
         deleteButton.className = "remove-button"
@@ -142,8 +145,6 @@ function renderProjects(manager) {
         projectButton.classList = "project-button"
         projectButton.textContent = project.title;
         projectButton.dataset.index = index + 5;
-
-        // write dialog whether tasks should be deleted with project as well
 
         deleteButton.addEventListener("click", () => {
             manager.removeProjectWithTasks(project);
@@ -234,7 +235,7 @@ function addTaskListener(manager) {
             e.preventDefault();
             const projectIndex = document.querySelector(".task-container").dataset.project;
             const task = manager.createTask(titleTextBox.value, descriptionText.value, selectDueDate.value, prioritySelect.value);
-            if (projectIndex > 4)  {
+            if (projectIndex > 3)  {
                 manager.assignTaskToProject(task, manager.basicProjects[projectIndex])
             };
             manager.refreshProjects()

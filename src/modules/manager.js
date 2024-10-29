@@ -4,7 +4,7 @@ import Task from "./task.js"
 
 export default class Manager {
     constructor() {
-        this.basicProjects = [new Project("all"), new Project("today"), new Project("withinWeek"), new Project("overdue"), new Project("completed")]
+        this.basicProjects = [new Project("All tasks"), new Project("Today"), new Project("Next 7 days"), new Project("Overdue")]
     }
 
     // PROJECT METHODS //
