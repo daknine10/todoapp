@@ -1,7 +1,6 @@
 import "./styles.css"
 import "date-fns"
 import Manager from "./modules/manager.js"
-import Task from "./modules/task.js"
 import { renderTaskList, addProjectListener, renderProjects, addTaskListener } from "./modules/render.js"
 
 const manager = new Manager()
@@ -10,6 +9,7 @@ if (window.localStorage.length !== 0) {
     manager.loadList();
 }
 
+(function buttons() {
 const all = document.querySelector("#all");
 all.addEventListener("click", () => {
     manager.refreshProjects()
@@ -33,6 +33,7 @@ overdue.addEventListener("click", () => {
     manager.refreshProjects()
     renderTaskList(manager, manager.basicProjects[3])
 })
+})();
 
 addProjectListener(manager);
 renderProjects(manager);
