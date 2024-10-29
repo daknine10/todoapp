@@ -188,3 +188,7 @@ p {
 .priority {
     font-weight: 1000;
 }
+
+h1 {
+    margin-left: 6px;
+}
